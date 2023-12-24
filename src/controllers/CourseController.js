@@ -1,6 +1,5 @@
 import Course from "../models/course.js";
-import multer from "multer";
-import cloudinary from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv"; // Import dotenv for dynamic environment variables
 
 dotenv.config();
@@ -11,22 +10,25 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 const CourseController = {
   // Create a new course
   createCourse: async (req, res) => {
     try {
-      const { title, video, description } = req.body;
+      console.log(process.env.CLOUDINARY_CLOUD_NAME);
+      console.log(process.env.CLOUDINARY_API_KEY);
+      console.log(process.env.CLOUDINARY_API_SECRET);
+
+      const { title, description } = req.body;
+      console.log(req.file);
 
       if (!req.file) {
         return res
           .status(400)
           .json({ success: false, errors: ["Video file is required"] });
       }
-
-      const result = await cloudinary.uploader.upload(req.file.buffer, {
+      const result = await cloudinary.uploader.upload(req.file.path, {
         resource_type: "video",
+        folder: "video",
       });
       const newCourse = new Course({
         title,
