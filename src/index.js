@@ -31,9 +31,9 @@ import fs from "fs";
 //#end region
 
 //#region setup middleware
+app.use(cors());
 app.use(express.json({ limit: "50mb", extended: true }));
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
 //#end region
 import userRouter from "./routers/UserRouter.js";
 import authRouter from "./routers/AuthRouter.js";
