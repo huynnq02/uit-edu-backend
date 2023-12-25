@@ -1,5 +1,7 @@
 import Course from "../models/course.js";
 import cloudinary from "../lib/cloudinary.js";
+import Category from "./models/Category";
+
 const CourseController = {
   // Create a new course
   createCourse: async (req, res) => {
@@ -8,7 +10,7 @@ const CourseController = {
       console.log(process.env.CLOUDINARY_API_KEY);
       console.log(process.env.CLOUDINARY_API_SECRET);
 
-      const { title, description } = req.body;
+      const { title, description, categoryId } = req.body;
       console.log(req.file);
 
       if (!req.file) {
@@ -24,9 +26,13 @@ const CourseController = {
         title,
         video: result.secure_url,
         description,
+        category: categoryId,
       });
 
       const savedCourse = await newCourse.save();
+      const updatedCategory = await Category.findByIdAndUpdate(categoryId, {
+        $push: { courses: savedCourse._id },
+      });
 
       return res.status(201).json({ success: true, message: savedCourse });
     } catch (error) {
