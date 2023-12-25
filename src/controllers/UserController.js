@@ -11,7 +11,7 @@ const UserController = {
       if (existingUser) {
         return res
           .status(400)
-          .json({ success: false, message: "Username is already taken" });
+          .json({ success: false, message: "our email is already taken" });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
