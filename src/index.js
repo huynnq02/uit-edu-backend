@@ -39,6 +39,7 @@ import userRouter from "./routers/UserRouter.js";
 import authRouter from "./routers/AuthRouter.js";
 import categoryRouter from "./routers/CategoryRouter.js";
 import courseRouter from "./routers/CourseRouter.js";
+import commentRouter from "./routers/CommentRouter.js";
 //#region import router
 
 //#end region
@@ -48,7 +49,7 @@ app.use("api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/courses", courseRouter);
-
+app.use("/api/comments", commentRouter);
 //#end region
 
 //#region connect to database
