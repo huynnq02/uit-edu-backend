@@ -1,6 +1,6 @@
 import Course from "../models/course.js";
 import cloudinary from "../lib/cloudinary.js";
-import Category from "./models/Category";
+import Category from "../models/category.js";
 
 const CourseController = {
   // Create a new course
