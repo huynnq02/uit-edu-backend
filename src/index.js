@@ -45,7 +45,7 @@ import commentRouter from "./routers/CommentRouter.js";
 //#end region
 
 //#region setup router
-app.use("api/users", userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/courses", courseRouter);
