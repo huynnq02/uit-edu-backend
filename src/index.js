@@ -31,7 +31,7 @@ import fs from "fs";
 //#end region
 
 //#region setup middleware
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json({ limit: "50mb", extended: true }));
 app.use(express.urlencoded({ extended: false }));
 //#end region
