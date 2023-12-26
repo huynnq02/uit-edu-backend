@@ -44,7 +44,7 @@ export const AuthController = {
       res.setHeader("Refresh-Token", refreshToken);
 
       user.save();
-      return res.status(200).json({ success: true, message: "Login success" });
+      return res.status(200).json({ success: true, message: "Login success", data: user });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
