@@ -32,7 +32,36 @@ const UserController = {
         .json({ success: false, errors: ["Server Internal Error"] });
     }
   },
+  createAdminUser: async (req, res) => {
+    try {
+      const { name, username, password } = req.body;
 
+      const existingUser = await User.findOne({ username });
+      if (existingUser) {
+        return res
+          .status(400)
+          .json({ success: false, message: "This username is already taken" });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const newAdminUser = new User({
+        name,
+        username,
+        password: hashedPassword,
+        role: "admin",
+      });
+
+      const savedAdminUser = await newAdminUser.save();
+
+      return res.status(201).json({ success: true, message: savedAdminUser });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, errors: ["Server Internal Error"] });
+    }
+  },
   updateUser: async (req, res) => {
     try {
       const { name, username, password } = req.body;
