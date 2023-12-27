@@ -1,4 +1,4 @@
-import Course from "../models/Course.js";
+import Course from "../models/course.js";
 import fs from "fs";
 import cloudinary from "../lib/cloudinary.js";
 const CourseController = {
