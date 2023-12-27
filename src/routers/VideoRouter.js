@@ -11,7 +11,14 @@ router.post(
   ]),
   VideoController.createVideo
 );
-router.put("/:videoId", VideoController.updateVideo);
+router.put(
+  "/:videoId",
+  multer.fields([
+    { name: "videoFile", maxCount: 1 },
+    { name: "thumbnailFile", maxCount: 1 },
+  ]),
+  VideoController.updateVideo
+);
 router.get("/:videoId", VideoController.getVideoById);
 router.get("/", VideoController.getAllVideos);
 router.delete("/:videoId", VideoController.deleteVideo);

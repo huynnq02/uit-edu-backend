@@ -79,13 +79,60 @@ const VideoController = {
 
   updateVideo: async (req, res) => {
     try {
-      const { title, src, thumbnail } = req.body;
+      const { title } = req.body;
+      const videoId = req.params.videoId;
+
+      const existingVideo = await Video.findById(videoId);
+
+      const newSrc = req.files.videoFile ? req.files.videoFile[0] : null;
+      const newThumbnail = req.files.thumbnailFile
+        ? req.files.thumbnailFile[0]
+        : null;
+
+      if (newSrc && existingVideo.src) {
+        await cloudinary.uploader.destroy(existingVideo.src);
+      }
+
+      if (newThumbnail && existingVideo.thumbnail) {
+        await cloudinary.uploader.destroy(existingVideo.thumbnail);
+      }
 
       const updatedVideo = await Video.findByIdAndUpdate(
-        req.params.videoId,
-        { title, src, thumbnail },
+        videoId,
+        { title },
         { new: true }
       );
+
+      if (newSrc) {
+        const videoResult = await cloudinary.uploader.upload(newSrc.path, {
+          resource_type: "video",
+          folder: "videos",
+        });
+
+        updatedVideo.src = videoResult.secure_url;
+      }
+
+      if (newThumbnail) {
+        const thumbnailResult = await cloudinary.uploader.upload(
+          newThumbnail.path,
+          {
+            resource_type: "image",
+            folder: "thumbnails",
+          }
+        );
+
+        updatedVideo.thumbnail = thumbnailResult.secure_url;
+      }
+
+      await updatedVideo.save();
+
+      if (newSrc) {
+        fs.unlinkSync(newSrc.path);
+      }
+
+      if (newThumbnail) {
+        fs.unlinkSync(newThumbnail.path);
+      }
 
       return res.status(200).json({ success: true, message: updatedVideo });
     } catch (error) {
