@@ -1,17 +1,48 @@
 import Course from "../models/Course.js";
-
+import fs from "fs";
+import cloudinary from "../lib/cloudinary.js";
 const CourseController = {
   createCourse: async (req, res) => {
     try {
       const { title, description, category } = req.body;
-      const newCourse = new Course({
-        title,
-        description,
-        category,
-      });
 
-      const savedCourse = await newCourse.save();
-      return res.status(201).json({ success: true, message: savedCourse });
+      if (!title || !description || !category || !req.file) {
+        return res.status(400).json({
+          success: false,
+          errors: ["Title, Description, Category, and Thumbnail are required"],
+        });
+      }
+
+      const thumbnailFile = req.file;
+
+      try {
+        const thumbnailResult = await cloudinary.uploader.upload(
+          thumbnailFile.path,
+          {
+            resource_type: "image",
+            folder: "thumbnails",
+          }
+        );
+
+        // Cleanup temporary file
+        fs.unlinkSync(thumbnailFile.path);
+
+        const newCourse = new Course({
+          title,
+          description,
+          thumbnail: thumbnailResult.secure_url,
+          category,
+        });
+
+        const savedCourse = await newCourse.save();
+        return res.status(201).json({ success: true, message: savedCourse });
+      } catch (uploadError) {
+        console.error("Cloudinary upload error:", uploadError);
+        return res.status(500).json({
+          success: false,
+          errors: ["Error uploading thumbnail to Cloudinary"],
+        });
+      }
     } catch (error) {
       console.error(error);
       return res

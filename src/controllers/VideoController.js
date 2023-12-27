@@ -27,14 +27,14 @@ const VideoController = {
       try {
         const videoResult = await cloudinary.uploader.upload(videoFile.path, {
           resource_type: "video",
-          folder: "video",
+          folder: "videos",
         });
 
         const thumbnailResult = await cloudinary.uploader.upload(
           thumbnailFile.path,
           {
             resource_type: "image",
-            folder: "thumbnail",
+            folder: "thumbnails",
           }
         );
 

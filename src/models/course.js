@@ -5,6 +5,10 @@ const courseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  thumbnail: {
+    type: String,
+    required: true,
+  },
   video: [
     {
       type: mongoose.Schema.Types.ObjectId,
