@@ -40,6 +40,7 @@ import authRouter from "./routers/AuthRouter.js";
 import categoryRouter from "./routers/CategoryRouter.js";
 import courseRouter from "./routers/CourseRouter.js";
 import commentRouter from "./routers/CommentRouter.js";
+import videoRouter from "./routers/VideoRouter.js";
 //#region import router
 
 //#end region
@@ -50,6 +51,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/courses", courseRouter);
 app.use("/api/comments", commentRouter);
+app.use("/api/videos", videoRouter);
 //#end region
 
 //#region connect to database

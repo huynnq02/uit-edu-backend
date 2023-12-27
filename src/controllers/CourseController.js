@@ -1,39 +1,16 @@
-import Course from "../models/course.js";
-import cloudinary from "../lib/cloudinary.js";
-import Category from "../models/category.js";
+import Course from "../models/Course.js";
 
 const CourseController = {
-  // Create a new course
   createCourse: async (req, res) => {
     try {
-      console.log(process.env.CLOUDINARY_CLOUD_NAME);
-      console.log(process.env.CLOUDINARY_API_KEY);
-      console.log(process.env.CLOUDINARY_API_SECRET);
-
-      const { title, description, categoryId } = req.body;
-      console.log(req.file);
-
-      if (!req.file) {
-        return res
-          .status(400)
-          .json({ success: false, errors: ["Video file is required"] });
-      }
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        resource_type: "video",
-        folder: "video",
-      });
+      const { title, description, category } = req.body;
       const newCourse = new Course({
         title,
-        video: result.secure_url,
         description,
-        category: categoryId,
+        category,
       });
 
       const savedCourse = await newCourse.save();
-      const updatedCategory = await Category.findByIdAndUpdate(categoryId, {
-        $push: { courses: savedCourse._id },
-      });
-
       return res.status(201).json({ success: true, message: savedCourse });
     } catch (error) {
       console.error(error);
@@ -43,14 +20,13 @@ const CourseController = {
     }
   },
 
-  // Update course information
   updateCourse: async (req, res) => {
     try {
-      const { title, video, description } = req.body;
+      const { title, description, category } = req.body;
 
       const updatedCourse = await Course.findByIdAndUpdate(
         req.params.courseId,
-        { title, video, description },
+        { title, description, category },
         { new: true }
       );
 
@@ -61,10 +37,11 @@ const CourseController = {
     }
   },
 
-  // Get course details by ID
   getCourseById: async (req, res) => {
     try {
-      const course = await Course.findById(req.params.courseId);
+      const course = await Course.findById(req.params.courseId)
+        .populate("category")
+        .populate("video");
       return res.status(200).json({ success: true, message: course });
     } catch (error) {
       console.error(error);
@@ -74,11 +51,40 @@ const CourseController = {
     }
   },
 
-  // Get a list of all courses
   getAllCourses: async (req, res) => {
     try {
-      const courses = await Course.find();
+      const courses = await Course.find()
+        .populate("category")
+        .populate("video");
       return res.status(200).json({ success: true, message: courses });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, errors: ["Server Internal Error"] });
+    }
+  },
+
+  deleteCourse: async (req, res) => {
+    try {
+      const courseId = req.params.courseId;
+
+      const course = await Course.findById(courseId).populate("video");
+
+      if (!course) {
+        return res
+          .status(404)
+          .json({ success: false, errors: ["Course not found"] });
+      }
+
+      if (course.video && course.video.length > 0) {
+        const videoIds = course.video.map((video) => video._id);
+        await Video.deleteMany({ _id: { $in: videoIds } });
+      }
+
+      const deletedCourse = await Course.findByIdAndDelete(courseId);
+
+      return res.status(200).json({ success: true, message: deletedCourse });
     } catch (error) {
       console.error(error);
       return res

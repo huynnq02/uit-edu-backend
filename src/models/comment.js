@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const commentSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Users",
+    ref: "users",
     required: true,
   },
   content: {
@@ -12,7 +12,7 @@ const commentSchema = new mongoose.Schema({
   },
   course: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Courses",
+    ref: "courses",
     required: true,
   },
   createdAt: {
@@ -21,6 +21,6 @@ const commentSchema = new mongoose.Schema({
   },
 });
 
-const Comment = mongoose.model("Comments", commentSchema);
+const Comment = mongoose.model("comments", commentSchema);
 
 export default Comment;

@@ -5,10 +5,12 @@ const courseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  video: {
-    type: String,
-    required: true,
-  },
+  video: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "videos",
+    },
+  ],
   uploadedTime: {
     type: Date,
     default: Date.now,
@@ -17,12 +19,12 @@ const courseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-   category: {
+  category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Categories", 
+    ref: "categories",
   },
 });
 
-const Course = mongoose.model("Courses", courseSchema);
+const Course = mongoose.model("courses", courseSchema);
 
 export default Course;
