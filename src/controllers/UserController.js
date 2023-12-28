@@ -2,7 +2,68 @@ import User from "../models/user.js";
 import bcrypt from "bcrypt";
 
 const UserController = {
-  // Create a new user
+  addBookmark: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { courseId } = req.body;
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, errors: ["User not found"] });
+      }
+      if (
+        user.bookmarkedCourses.some((course) => course.course.equals(courseId))
+      ) {
+        return res
+          .status(400)
+          .json({ success: false, errors: ["Course already bookmarked"] });
+      }
+
+      user.bookmarkedCourses.push({ course: courseId });
+      await user.save();
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Bookmark added successfully" });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, errors: ["Server Internal Error"] });
+    }
+  },
+  deleteBookmark: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { courseId } = req.body;
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, errors: ["User not found"] });
+      }
+
+      user.bookmarkedCourses = user.bookmarkedCourses.filter(
+        (course) => !course.course.equals(courseId)
+      );
+
+      await user.save();
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Bookmark deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, errors: ["Server Internal Error"] });
+    }
+  },
   createUser: async (req, res) => {
     try {
       const { name, username, password } = req.body;

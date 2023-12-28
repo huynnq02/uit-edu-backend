@@ -26,6 +26,14 @@ let user = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  bookmarkedCourses: [
+    {
+      course: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "courses",
+      },
+    },
+  ],
   role: {
     type: String,
     enum: ["student", "admin"],
