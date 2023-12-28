@@ -10,5 +10,6 @@ router.get("/:userId", UserController.getUserById);
 router.get("/", UserController.getAllUsers);
 router.post("/:userId/bookmarks", UserController.addBookmark);
 router.delete("/:userId/bookmarks", UserController.deleteBookmark);
+router.get("/:userId/bookmarks", UserController.getAllBookmarksByUserId);
 
 export default router;

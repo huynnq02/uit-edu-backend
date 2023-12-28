@@ -2,6 +2,28 @@ import User from "../models/user.js";
 import bcrypt from "bcrypt";
 
 const UserController = {
+  getAllBookmarksByUserId: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, errors: ["User not found"] });
+      }
+
+      const bookmarks = user.bookmarkedCourses;
+
+      return res.status(200).json({ success: true, message: bookmarks });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, errors: ["Server Internal Error"] });
+    }
+  },
   addBookmark: async (req, res) => {
     try {
       const userId = req.params.userId;
