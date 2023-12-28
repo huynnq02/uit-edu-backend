@@ -44,7 +44,9 @@ export const AuthController = {
       res.setHeader("Refresh-Token", refreshToken);
 
       user.save();
-      return res.status(200).json({ success: true, message: "Login success", data: user });
+      return res
+        .status(200)
+        .json({ success: true, message: "Login success", data: user });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -53,5 +55,36 @@ export const AuthController = {
 
   checkToken: async (req, res) => {
     return res.status(200).json({ success: true, message: "Token pass" });
+  },
+  
+  lockUser: async (req, res) => {
+    try {
+      const { userId } = req.params;
+
+      if (req.user.role !== "admin") {
+        return res
+          .status(403)
+          .json({ success: false, message: "Permission denied" });
+      }
+
+      const userToLock = await User.findById(userId);
+
+      if (!userToLock) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+      }
+
+      userToLock.isLocked = true;
+      await userToLock.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "User locked successfully",
+        data: userToLock,
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
   },
 };

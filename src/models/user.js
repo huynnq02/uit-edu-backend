@@ -39,6 +39,10 @@ let user = new mongoose.Schema({
     enum: ["student", "admin"],
     default: "student",
   },
+  isLocked: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const User = mongoose.model("users", user, "users");
