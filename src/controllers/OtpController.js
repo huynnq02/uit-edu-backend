@@ -19,7 +19,7 @@ export const OtpController = {
     async (req, res) => {
       try {
         const email = req.body.email;
-        const user = await User.findOne({ username: email });
+        const user = await User.findOne({ email: email });
         if (user) {
           return res
             .status(200)
@@ -327,12 +327,10 @@ export const OtpController = {
   ],
   verifyOtp: async (req, res) => {
     try {
-      const { email, phoneNumber, otp } = req.body;
-      if (phoneNumber) {
-        var otpDocument = await Otp.findOne({ phoneNumber: phoneNumber });
-      } else if (email) {
-        var otpDocument = await Otp.findOne({ email: email });
-      }
+      const { email, otp } = req.body;
+
+      var otpDocument = await Otp.findOne({ email: email });
+
       if (otpDocument.otp == otp) {
         await Otp.deleteOne(otpDocument);
         return res.status(200).json({

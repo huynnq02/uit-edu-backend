@@ -39,7 +39,7 @@ const JWTMiddleware = {
 
         const newAccessToken = jwt.sign(
           {
-            username: decodedRefreshToken.username,
+            email: decodedRefreshToken.email,
             email: decodedRefreshToken.email,
             userId: decodedRefreshToken.id,
           },

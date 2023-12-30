@@ -10,11 +10,11 @@ export const AuthController = {
   //Region login
   loginUser: async (req, res) => {
     try {
-      let user = await User.findOne({ username: req.body.username });
+      let user = await User.findOne({ email: req.body.email });
       if (!user) {
         return res
           .status(400)
-          .json({ success: false, message: "Username does not exist" });
+          .json({ success: false, message: "Email does not exist" });
       }
       const isValidPassword = await bcrypt.compare(
         req.body.password,
@@ -27,7 +27,6 @@ export const AuthController = {
       }
       const accessToken = jwt.sign(
         {
-          username: req.body.username,
           email: user.email,
           userId: user.id,
           role: user.role,
@@ -38,7 +37,6 @@ export const AuthController = {
 
       const refreshToken = jwt.sign(
         {
-          username: req.body.username,
           email: user.email,
           userId: user.id,
           role: user.role,

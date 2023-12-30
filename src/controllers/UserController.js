@@ -1,3 +1,4 @@
+import Otp from "../models/otp.js";
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 
@@ -88,9 +89,19 @@ const UserController = {
   },
   createUser: async (req, res) => {
     try {
-      const { name, username, password } = req.body;
+      const { name, email, password, otp } = req.body;
 
-      const existingUser = await User.findOne({ username });
+      var otpDocument = await Otp.findOne({ email: email });
+
+      if (otpDocument.otp != otp) {
+        return res.status(500).json({
+          success: false,
+          message: "OTP does not match",
+        });
+      }
+      await Otp.deleteOne(otpDocument);
+
+      const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res
           .status(400)
@@ -101,7 +112,7 @@ const UserController = {
 
       const newUser = new User({
         name,
-        username,
+        email,
         password: hashedPassword,
       });
 
@@ -117,20 +128,20 @@ const UserController = {
   },
   createAdminUser: async (req, res) => {
     try {
-      const { name, username, password } = req.body;
+      const { name, email, password } = req.body;
 
-      const existingUser = await User.findOne({ username });
+      const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res
           .status(400)
-          .json({ success: false, message: "This username is already taken" });
+          .json({ success: false, message: "This email is already taken" });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const newAdminUser = new User({
         name,
-        username,
+        email,
         password: hashedPassword,
         role: "admin",
       });
@@ -147,13 +158,13 @@ const UserController = {
   },
   updateUser: async (req, res) => {
     try {
-      const { name, username, password } = req.body;
+      const { name, email, password } = req.body;
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const updatedUser = await User.findByIdAndUpdate(
         req.params.userId,
-        { name, username, password: hashedPassword },
+        { name, email, password: hashedPassword },
         { new: true }
       );
 
