@@ -1,12 +1,30 @@
 import express from "express";
 const router = express.Router();
 import CategoryController from "../controllers/CategoryController.js";
-import verifyToken from "../middlewares/JWT.js";
-
-router.post("/", verifyToken, CategoryController.createCategory);
-router.put("/:categoryId", verifyToken, CategoryController.updateCategory);
-router.get("/:categoryId", verifyToken, CategoryController.getCategoryById);
-router.get("/", verifyToken, CategoryController.getAllCategories);
-router.delete("/:categoryId", verifyToken, CategoryController.deleteCategory);
+import JWTMiddleware from "../middlewares/JWT.js";
+router.post(
+  "/",
+  JWTMiddleware.verifyToken,
+  JWTMiddleware.checkAdminRole,
+  CategoryController.createCategory
+);
+router.put(
+  "/:categoryId",
+  JWTMiddleware.verifyToken,
+  JWTMiddleware.checkAdminRole,
+  CategoryController.updateCategory
+);
+router.get(
+  "/:categoryId",
+  JWTMiddleware.verifyToken,
+  CategoryController.getCategoryById
+);
+router.get("/", JWTMiddleware.verifyToken, CategoryController.getAllCategories);
+router.delete(
+  "/:categoryId",
+  JWTMiddleware.verifyToken,
+  JWTMiddleware.checkAdminRole,
+  CategoryController.deleteCategory
+);
 
 export default router;

@@ -1,15 +1,23 @@
 import express from "express";
 const router = express.Router();
-import verifyToken from "../middlewares/JWT.js";
+import JWTMiddleware from "../middlewares/JWT.js";
 import { CommentController } from "../controllers/CommentController.js";
 
-router.post("/", verifyToken, CommentController.createComment);
+router.post("/", JWTMiddleware.verifyToken, CommentController.createComment);
 router.get(
   "/course/:courseId",
-  verifyToken,
+  JWTMiddleware.verifyToken,
   CommentController.getCommentsByCourse
 );
-router.put("/:commentId", verifyToken, CommentController.updateComment);
-router.delete("/:commentId", verifyToken, CommentController.deleteComment);
+router.put(
+  "/:commentId",
+  JWTMiddleware.verifyToken,
+  CommentController.updateComment
+);
+router.delete(
+  "/:commentId",
+  JWTMiddleware.verifyToken,
+  CommentController.deleteComment
+);
 
 export default router;
