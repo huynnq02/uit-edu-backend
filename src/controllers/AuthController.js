@@ -2,9 +2,9 @@ import User from "../models/user.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv"; // Import dotenv for dynamic environment variables
+import dotenv from "dotenv"; 
 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config(); 
 
 export const AuthController = {
   //Region login
@@ -52,10 +52,6 @@ export const AuthController = {
     }
   },
   //End region
-
-  checkToken: async (req, res) => {
-    return res.status(200).json({ success: true, message: "Token pass" });
-  },
   
   lockUser: async (req, res) => {
     try {

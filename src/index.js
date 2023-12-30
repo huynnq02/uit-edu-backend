@@ -56,6 +56,10 @@ app.use("/api/videos", videoRouter);
 app.use("/api/otps", otpRouter);
 //#end region
 
+//#region background tasks
+import "./services/agenda.js";
+//#end region
+
 //#region connect to database
 // console.log("-------------------------");
 // console.log("MONGO_URL: " + process.env.MONGO_URL);
