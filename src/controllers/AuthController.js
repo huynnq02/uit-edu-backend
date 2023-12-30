@@ -33,7 +33,7 @@ export const AuthController = {
           role: user.role,
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "10m" }
+        { expiresIn: "1d" }
       );
 
       const refreshToken = jwt.sign(
@@ -46,13 +46,17 @@ export const AuthController = {
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "7d" }
       );
-      res.setHeader("Access-Token", accessToken);
-      res.setHeader("Refresh-Token", refreshToken);
+      // res.setHeader("Access-Token", accessToken);
+      // res.setHeader("Refresh-Token", refreshToken);
 
       user.save();
-      return res
-        .status(200)
-        .json({ success: true, message: "Login success", data: user });
+      return res.status(200).json({
+        success: true,
+        message: "Login success",
+        data: user,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
