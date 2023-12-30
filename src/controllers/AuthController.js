@@ -2,9 +2,9 @@ import User from "../models/user.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv"; 
+import dotenv from "dotenv";
 
-dotenv.config(); 
+dotenv.config();
 
 export const AuthController = {
   //Region login
@@ -26,7 +26,12 @@ export const AuthController = {
           .json({ success: false, message: "Password is incorrect" });
       }
       const accessToken = jwt.sign(
-        { username: req.body.username, email: user.email, userId: user.id },
+        {
+          username: req.body.username,
+          email: user.email,
+          userId: user.id,
+          role: user.role,
+        },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "10m" }
       );
@@ -36,6 +41,7 @@ export const AuthController = {
           username: req.body.username,
           email: user.email,
           userId: user.id,
+          role: user.role,
         },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "7d" }
@@ -52,7 +58,7 @@ export const AuthController = {
     }
   },
   //End region
-  
+
   lockUser: async (req, res) => {
     try {
       const { userId } = req.params;
