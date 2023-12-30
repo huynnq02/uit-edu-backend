@@ -1,7 +1,8 @@
 import express from "express";
 const router = express.Router();
-import multer from "../lib/multer.js"; 
+import multer from "../lib/multer.js";
 import VideoController from "../controllers/VideoController.js";
+import verifyToken from "../middlewares/JWT.js";
 
 router.post(
   "/",
@@ -9,6 +10,7 @@ router.post(
     { name: "videoFile", maxCount: 1 },
     { name: "thumbnailFile", maxCount: 1 },
   ]),
+  verifyToken,
   VideoController.createVideo
 );
 router.put(
@@ -17,10 +19,11 @@ router.put(
     { name: "videoFile", maxCount: 1 },
     { name: "thumbnailFile", maxCount: 1 },
   ]),
+  verifyToken,
   VideoController.updateVideo
 );
-router.get("/:videoId", VideoController.getVideoById);
-router.get("/", VideoController.getAllVideos);
-router.delete("/:videoId", VideoController.deleteVideo);
+router.get("/:videoId", verifyToken, VideoController.getVideoById);
+router.get("/", verifyToken, VideoController.getAllVideos);
+router.delete("/:videoId", verifyToken, VideoController.deleteVideo);
 
 export default router;
