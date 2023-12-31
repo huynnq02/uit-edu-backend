@@ -3,7 +3,7 @@ const router = express.Router();
 import multer from "../lib/multer.js";
 import VideoController from "../controllers/VideoController.js";
 import JWTMiddleware from "../middlewares/JWT.js";
-
+import cors from "cors";
 router.post(
   "/",
   multer.fields([
@@ -12,6 +12,7 @@ router.post(
   ]),
   JWTMiddleware.verifyToken,
   JWTMiddleware.checkAdminRole,
+  cors(),
   VideoController.createVideo
 );
 router.put(
