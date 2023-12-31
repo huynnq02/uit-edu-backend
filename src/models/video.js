@@ -17,6 +17,10 @@ const videoSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "courses",
   },
+  uploadedTime: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Video = mongoose.model("videos", videoSchema);
