@@ -12,7 +12,6 @@ router.post(
   ]),
   JWTMiddleware.verifyToken,
   JWTMiddleware.checkAdminRole,
-  cors(),
   VideoController.createVideo
 );
 router.put(
