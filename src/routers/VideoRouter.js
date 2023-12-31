@@ -3,16 +3,21 @@ const router = express.Router();
 import multer from "../lib/multer.js";
 import VideoController from "../controllers/VideoController.js";
 import JWTMiddleware from "../middlewares/JWT.js";
-import cors from "cors";
+// router.post(
+//   "/",
+//   multer.fields([
+//     { name: "videoFile", maxCount: 1 },
+//     { name: "thumbnailFile", maxCount: 1 },
+//   ]),
+//   JWTMiddleware.verifyToken,
+//   JWTMiddleware.checkAdminRole,
+//   VideoController.createVideo
+// );
 router.post(
   "/",
-  multer.fields([
-    { name: "videoFile", maxCount: 1 },
-    { name: "thumbnailFile", maxCount: 1 },
-  ]),
   JWTMiddleware.verifyToken,
   JWTMiddleware.checkAdminRole,
-  VideoController.createVideo
+  VideoController.createVideoWithText
 );
 router.put(
   "/:videoId",

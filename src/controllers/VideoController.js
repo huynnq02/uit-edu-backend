@@ -3,6 +3,44 @@ import Course from "../models/course.js";
 import cloudinary from "../lib/cloudinary.js";
 import fs from "fs";
 const VideoController = {
+  createVideoWithText: async (req, res) => {
+    try {
+      const { title, thumbnail, src, course } = req.body;
+      if (!title || !thumbnail || !src || !course) {
+        return res.status(400).json({
+          success: false,
+          errors: ["Title, thumbnail, source, and course are required"],
+        });
+      }
+      const newVideo = new Video({
+        title,
+        thumbnail,
+        src,
+        course,
+      });
+
+      const savedVideo = await newVideo.save();
+
+      const existingCourse = await Course.findById(course);
+      if (existingCourse) {
+        await Course.findByIdAndUpdate(course, {
+          $push: { video: savedVideo._id },
+        });
+      } else {
+        return res.status(404).json({
+          success: false,
+          errors: ["Course not found"],
+        });
+      }
+
+      return res.status(201).json({ success: true, message: savedVideo });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, errors: ["Server Internal Error"] });
+    }
+  },
   createVideo: async (req, res) => {
     try {
       const { title, course } = req.body;
