@@ -17,6 +17,12 @@ const videoSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "courses",
   },
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "likes",
+    },
+  ],
   uploadedTime: {
     type: Date,
     default: Date.now,

@@ -5,35 +5,19 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import http, { get } from "http";
-// import admin from "mongodb-admin";
 
 //#region initialize server
 dotenv.config();
-
 const app = express();
-
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
-//#end region
-
-// app.use(bodyParser.json());
-
-//#region setup swagger
-/* The line `import YAML from "yaml";` is importing the YAML package. This package allows you to parse
-and manipulate YAML files in JavaScript. In this code, it is used to parse a YAML file and generate
-a Swagger document for setting up API documentation using Swagger UI. */
-// import swaggerUi from "swagger-ui-express";
-import fs from "fs";
-// import YAML from "yaml";
-// const file = fs.readFileSync("./swagger.yaml", "utf8");
-// const swaggerDocument = YAML.parse(file);
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 //#end region
 
 //#region setup middleware
 app.use(cors({ credentials: true, origin: true, exposedHeaders: "*" }));
 app.use(express.json({ limit: "50mb", extended: true }));
 app.use(express.urlencoded({ extended: false }));
+
 //#end region
 import userRouter from "./routers/UserRouter.js";
 import authRouter from "./routers/AuthRouter.js";
@@ -43,6 +27,7 @@ import commentRouter from "./routers/CommentRouter.js";
 import videoRouter from "./routers/VideoRouter.js";
 import otpRouter from "./routers/OtpRouter.js";
 import reviewRouter from "./routers/ReviewRouter.js";
+import likeRouter from "./routers/LikeRouter.js";
 //#region import router
 
 //#end region
@@ -56,6 +41,7 @@ app.use("/api/comments", commentRouter);
 app.use("/api/videos", videoRouter);
 app.use("/api/otps", otpRouter);
 app.use("/api/reviews", reviewRouter);
+app.use("/api/likes", likeRouter);
 //#end region
 
 //#region background tasks
@@ -63,9 +49,6 @@ import "./services/agenda.js";
 //#end region
 
 //#region connect to database
-// console.log("-------------------------");
-// console.log("MONGO_URL: " + process.env.MONGO_URL);
-// console.log("-------------------------");
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
