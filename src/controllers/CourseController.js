@@ -1,6 +1,7 @@
 import Course from "../models/course.js";
 import fs from "fs";
 import cloudinary from "../lib/cloudinary.js";
+import PAGINATION_CONSTANTS from "../constants/PaginationConstant.js";
 const CourseController = {
   createCourseWithText: async (req, res) => {
     try {
@@ -128,7 +129,10 @@ const CourseController = {
       const course = await Course.findById(req.params.courseId)
         .populate("category")
         .populate("video");
-      return res.status(200).json({ success: true, message: course });
+      return res.status(200).json({
+        success: true,
+        message: course,
+      });
     } catch (error) {
       console.error(error);
       return res
@@ -139,10 +143,24 @@ const CourseController = {
 
   getAllCourses: async (req, res) => {
     try {
+      const page = parseInt(req.query.page) || 1;
+      const pageSize =
+        parseInt(req.query.pageSize) || PAGINATION_CONSTANTS.PAGE_SIZE;
+      const skip = (page - 1) * pageSize;
+
       const courses = await Course.find()
         .populate("category")
-        .populate("video");
-      return res.status(200).json({ success: true, message: courses });
+        .populate("video")
+        .skip(skip)
+        .limit(pageSize);
+      const totalCourses = await Course.countDocuments();
+      const totalPages = Math.ceil(totalCourses / pageSize);
+      return res.status(200).json({
+        success: true,
+        message: courses,
+        totalCourses: totalCourses,
+        totalPages: totalPages,
+      });
     } catch (error) {
       console.error(error);
       return res

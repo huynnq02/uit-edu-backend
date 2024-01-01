@@ -1,0 +1,5 @@
+const PAGINATION_CONSTANTS = {
+  PAGE_SIZE: 30,
+};
+
+export default PAGINATION_CONSTANTS;
