@@ -27,10 +27,13 @@ export const CommentController = {
       const videoId = req.params.videoId;
 
       const comments = await Comment.find({ video: videoId })
-        .populate("users", "videos")
+        .populate("user video")
         .sort({ createdAt: -1 });
 
-      return res.status(200).json({ success: true, message: comments });
+      return res.status(200).json({
+        success: true,
+        message: { ...comments, numberOfComments: comments.length },
+      });
     } catch (error) {
       console.error(error);
       return res
