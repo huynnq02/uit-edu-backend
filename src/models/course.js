@@ -28,6 +28,7 @@ const courseSchema = new mongoose.Schema({
     ref: "categories",
   },
 });
+courseSchema.index({ title: "text", description: "text" });
 
 const Course = mongoose.model("courses", courseSchema);
 

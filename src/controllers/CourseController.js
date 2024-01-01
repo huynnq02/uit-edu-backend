@@ -2,6 +2,34 @@ import Course from "../models/course.js";
 import fs from "fs";
 import cloudinary from "../lib/cloudinary.js";
 const CourseController = {
+  searchCourses: async (req, res) => {
+    try {
+      const { query } = req.query;
+      console.log(query);
+      if (!query) {
+        return res.status(400).json({
+          success: false,
+          errors: ["Query parameter is required for search"],
+        });
+      }
+
+      // Use text index to perform a search on title and description
+      const courses = await Course.find(
+        { $text: { $search: query } },
+        { score: { $meta: "textScore" } }
+      )
+        .sort({ score: { $meta: "textScore" } })
+        .populate("category")
+        .populate("video");
+
+      return res.status(200).json({ success: true, message: courses });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, errors: ["Server Internal Error"] });
+    }
+  },
   createCourse: async (req, res) => {
     try {
       const { title, description, category } = req.body;

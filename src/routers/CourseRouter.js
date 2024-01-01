@@ -11,6 +11,12 @@ router.post(
   JWTMiddleware.checkAdminRole,
   CourseController.createCourse
 );
+router.get(
+  "/search",
+  // JWTMiddleware.verifyToken,
+  CourseController.searchCourses
+);
+
 router.put(
   "/:courseId",
   JWTMiddleware.verifyToken,
