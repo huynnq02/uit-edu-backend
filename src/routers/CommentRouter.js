@@ -5,9 +5,9 @@ import { CommentController } from "../controllers/CommentController.js";
 
 router.post("/", JWTMiddleware.verifyToken, CommentController.createComment);
 router.get(
-  "/course/:courseId",
+  "/video/:videoId",
   JWTMiddleware.verifyToken,
-  CommentController.getCommentsByCourse
+  CommentController.getCommentsByVideo
 );
 router.put(
   "/:commentId",

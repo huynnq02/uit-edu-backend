@@ -10,9 +10,9 @@ const commentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  course: {
+  video: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "courses",
+    ref: "videos", 
     required: true,
   },
   createdAt: {

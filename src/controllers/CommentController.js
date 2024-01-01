@@ -3,12 +3,12 @@ import Comment from "../models/comment.js";
 export const CommentController = {
   createComment: async (req, res) => {
     try {
-      const { user, content, course } = req.body;
+      const { user, content, video } = req.body;
 
       const newComment = new Comment({
         user,
         content,
-        course,
+        video,
       });
 
       const savedComment = await newComment.save();
@@ -22,12 +22,12 @@ export const CommentController = {
     }
   },
 
-  getCommentsByCourse: async (req, res) => {
+  getCommentsByVideo: async (req, res) => {
     try {
-      const courseId = req.params.courseId;
+      const videoId = req.params.videoId;
 
-      const comments = await Comment.find({ course: courseId })
-        .populate("users", "courses")
+      const comments = await Comment.find({ video: videoId })
+        .populate("users", "videos")
         .sort({ createdAt: -1 });
 
       return res.status(200).json({ success: true, message: comments });
