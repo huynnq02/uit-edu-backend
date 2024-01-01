@@ -4,12 +4,18 @@ import CourseController from "../controllers/CourseController.js";
 import storage from "../lib/multer.js";
 import JWTMiddleware from "../middlewares/JWT.js";
 
+// router.post(
+//   "/",
+//   storage.single("thumbnailFile"),
+//   JWTMiddleware.verifyToken,
+//   JWTMiddleware.checkAdminRole,
+//   CourseController.createCourse
+// );
 router.post(
   "/",
-  storage.single("thumbnailFile"),
   JWTMiddleware.verifyToken,
   JWTMiddleware.checkAdminRole,
-  CourseController.createCourse
+  CourseController.createCourseWithText
 );
 router.get(
   "/search",

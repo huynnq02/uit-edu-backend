@@ -2,6 +2,33 @@ import Course from "../models/course.js";
 import fs from "fs";
 import cloudinary from "../lib/cloudinary.js";
 const CourseController = {
+  createCourseWithText: async (req, res) => {
+    try {
+      const { title, description, category, thumbnail } = req.body;
+
+      if (!title || !description || !category || !thumbnail) {
+        return res.status(400).json({
+          success: false,
+          errors: ["Title, Description, Category, and Thumbnail are required"],
+        });
+      }
+
+      const newCourse = new Course({
+        title,
+        description,
+        thumbnail,
+        category,
+      });
+
+      const savedCourse = await newCourse.save();
+      return res.status(201).json({ success: true, message: savedCourse });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ success: false, errors: ["Server Internal Error"] });
+    }
+  },
   searchCourses: async (req, res) => {
     try {
       const { query } = req.query;
