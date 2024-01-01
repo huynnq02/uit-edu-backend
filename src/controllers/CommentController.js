@@ -32,7 +32,7 @@ export const CommentController = {
 
       return res.status(200).json({
         success: true,
-        message: { ...comments, numberOfComments: comments.length },
+        message: comments,
       });
     } catch (error) {
       console.error(error);
