@@ -42,6 +42,7 @@ import courseRouter from "./routers/CourseRouter.js";
 import commentRouter from "./routers/CommentRouter.js";
 import videoRouter from "./routers/VideoRouter.js";
 import otpRouter from "./routers/OtpRouter.js";
+import reviewRouter from "./routers/ReviewRouter.js";
 //#region import router
 
 //#end region
@@ -54,6 +55,7 @@ app.use("/api/courses", courseRouter);
 app.use("/api/comments", commentRouter);
 app.use("/api/videos", videoRouter);
 app.use("/api/otps", otpRouter);
+app.use("/api/reviews", reviewRouter);
 //#end region
 
 //#region background tasks
